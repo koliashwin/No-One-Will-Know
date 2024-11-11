@@ -14,6 +14,9 @@ var is_dead: bool = false
 #import the required nodes
 @onready var player_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
+func _ready() -> void:
+	add_to_group('Player')
+
 func _physics_process(delta: float) -> void:
 	
 	#Horizontal movment logic

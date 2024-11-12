@@ -1,0 +1,140 @@
+[gd_scene load_steps=20 format=3 uid="uid://cuwwlxmpw12av"]
+
+[ext_resource type="Script" path="res://scripts/enemies/guard.gd" id="1_0uhk7"]
+[ext_resource type="Texture2D" uid="uid://b7sikfn8yfhie" path="res://assets/enemies/guard/guard_attack0033.png" id="2_qvqg5"]
+[ext_resource type="Texture2D" uid="uid://54q1gx5j2ewj" path="res://assets/enemies/guard/guard_attack0036.png" id="3_2f6u6"]
+[ext_resource type="Texture2D" uid="uid://dwa7aprbkdo73" path="res://assets/enemies/guard/guard_attack0039.png" id="4_pl7t0"]
+[ext_resource type="Texture2D" uid="uid://ddxnw6588mtyb" path="res://assets/enemies/guard/guard_attack0042.png" id="5_nttkr"]
+[ext_resource type="Texture2D" uid="uid://c8wrsnc8lvfw2" path="res://assets/enemies/guard/guard_attack0045.png" id="6_6i62l"]
+[ext_resource type="Texture2D" uid="uid://dr6n2ba1l5ofd" path="res://assets/enemies/guard/guard_death0018.png" id="7_kllxh"]
+[ext_resource type="Texture2D" uid="uid://drgnh4fjmnfjd" path="res://assets/enemies/guard/guard_death0021.png" id="8_sjwnu"]
+[ext_resource type="Texture2D" uid="uid://dvxqnlyq42qjj" path="res://assets/enemies/guard/guard_death0024.png" id="9_88o53"]
+[ext_resource type="Texture2D" uid="uid://eq5084iyg6la" path="res://assets/enemies/guard/guard_death0027.png" id="10_f33w0"]
+[ext_resource type="Texture2D" uid="uid://lkg1mv1htnuy" path="res://assets/enemies/guard/guard_walk0000.png" id="11_dcdrf"]
+[ext_resource type="Texture2D" uid="uid://cximhssukm63g" path="res://assets/enemies/guard/guard_walk0003.png" id="12_q6nyk"]
+[ext_resource type="Texture2D" uid="uid://iff5fg3o6dc7" path="res://assets/enemies/guard/guard_walk0006.png" id="13_t7ig2"]
+[ext_resource type="Texture2D" uid="uid://d0u2ev6aoqf1b" path="res://assets/enemies/guard/guard_walk0009.png" id="14_cg4xa"]
+[ext_resource type="Texture2D" uid="uid://dbyft2q3wigsf" path="res://assets/enemies/guard/guard_walk0012.png" id="15_jv03a"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e8v70"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qvqg5")
+}, {
+"duration": 0.7,
+"texture": ExtResource("3_2f6u6")
+}, {
+"duration": 0.7,
+"texture": ExtResource("4_pl7t0")
+}, {
+"duration": 0.7,
+"texture": ExtResource("5_nttkr")
+}, {
+"duration": 0.7,
+"texture": ExtResource("6_6i62l")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_kllxh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_sjwnu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_88o53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_f33w0")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_f33w0")
+}],
+"loop": true,
+"name": &"died",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qvqg5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_dcdrf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_q6nyk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_t7ig2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_cg4xa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_jv03a")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jwja1"]
+size = Vector2(80, 80)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_8mq5f"]
+a = Vector2(-192, 4)
+b = Vector2(64, 4)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_15bnl"]
+a = Vector2(0, 4)
+b = Vector2(-64, 4)
+
+[node name="guard" type="CharacterBody2D"]
+collision_layer = 4
+script = ExtResource("1_0uhk7")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_e8v70")
+animation = &"attack"
+autoplay = "idle"
+frame = 4
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jwja1")
+
+[node name="DetectionRange" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
+position = Vector2(0, -4)
+shape = SubResource("SegmentShape2D_8mq5f")
+
+[node name="AttackRange" type="Area2D" parent="."]
+position = Vector2(0, 12)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+shape = SubResource("SegmentShape2D_15bnl")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="body_entered" from="DetectionRange" to="." method="_on_detection_range_body_entered"]
+[connection signal="body_exited" from="DetectionRange" to="." method="_on_detection_range_body_exited"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]

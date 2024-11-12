@@ -57,8 +57,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t5mf3"]
 size = Vector2(80, 56)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fcjcf"]
-size = Vector2(248, 32)
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_x5on5"]
+a = Vector2(64, 0)
+b = Vector2(-192, 0)
 
 [node name="slime" type="CharacterBody2D"]
 collision_layer = 4
@@ -79,8 +80,7 @@ collision_layer = 4
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
-position = Vector2(-136, 0)
-shape = SubResource("RectangleShape2D_fcjcf")
+shape = SubResource("SegmentShape2D_x5on5")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="DetectionRange" to="." method="_on_area_2d_body_entered"]

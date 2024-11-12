@@ -1,17 +1,17 @@
-extends CharacterBody2D
+extends "res://scripts/enemies/enemy_base.gd"
 # Slime Script(enemy)
 #declare export variables
-@export var speed: float = 200
-@export var gravity: float = 100
+@export var slime_speed: float = 200
 
 # reference and condition variables
-var player_node: Node2D
-var player_detected: bool = false
 var is_surprised: bool = false
 
 # import required nodes
 @onready var slime_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var slime_detection_range: Area2D = $DetectionRange
+
+func _ready() -> void:
+	speed = slime_speed
 
 func _physics_process(delta: float) -> void:
 	if player_detected:
@@ -22,19 +22,19 @@ func _physics_process(delta: float) -> void:
 	update_animation()
 	move_and_slide()
 
-func apply_gravity(gravity: float, max_fall_speed: float) -> void:
-	#function to handle gravity applied on the player
-	if !is_on_floor() and velocity.y <= max_fall_speed:
-		velocity.y += gravity
+#func apply_gravity(gravity: float, max_fall_speed: float) -> void:
+	##function to handle gravity applied on the player
+	#if !is_on_floor() and velocity.y <= max_fall_speed:
+		#velocity.y += gravity
 
-func run(
-	player_position: Vector2, 		#player co-ordinates
-	run_direction: int = 1, 		#use 1 to run towards player and -1 to run away from player
-	speed_multiplayer: float = 1.5
-	) -> void:
-	
-	var direction: Vector2 = (player_position - global_position).normalized()
-	velocity.x = direction.x * speed * speed_multiplayer * run_direction
+#func run(
+	#player_position: Vector2, 		#player co-ordinates
+	#run_direction: int = 1, 		#use 1 to run towards player and -1 to run away from player
+	#speed_multiplayer: float = 1.5
+	#) -> void:
+	#
+	#var direction: Vector2 = (player_position - global_position).normalized()
+	#velocity.x = direction.x * speed * speed_multiplayer * run_direction
 
 func flip_slime_node():
 	#logic to flip whole parent node along with collisoin shape and area2d nodes
@@ -64,11 +64,7 @@ func update_animation() -> void:
 		slime_sprite.play('surprised')
 		return
 	
-	if is_on_floor():
-		if velocity.x == 0:
-			slime_sprite.play("idle")
-		else:
-			slime_sprite.play('run')
+	horizontal_movment_animations(slime_sprite)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if slime_sprite.animation == 'surprised':

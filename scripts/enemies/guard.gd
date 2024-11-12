@@ -1,20 +1,20 @@
 extends "res://scripts/enemies/enemy_base.gd"
-# Sack_Guy Script(enemy)
-#declare export variables(repeated var)
-@export var sack_guy_speed: float = 120
-@export var sack_guy_gravity: float = 100
-@export var sack_guy_patrol_dist: int = 64
+
+# Guard Script(enemy)
+var guard_speed: float = 150
+var guard_gravity: float = 100
+var guard_patrol_dist: int = 128
 
 #import the required nodes
-@onready var sack_guy_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var sack_guy_detection_range: Area2D = $DetectionRange
-@onready var sack_guy_attack_range: Area2D = $AttackRange
+@onready var guard_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var guard_detection_range: Area2D = $DetectionRange
+@onready var guard_attack_range: Area2D = $AttackRange
 
 
 func _ready() -> void:
-	speed = sack_guy_speed
-	gravity = sack_guy_gravity
-	patrol_dist = sack_guy_patrol_dist
+	speed = guard_speed
+	gravity = guard_gravity
+	patrol_dist = guard_patrol_dist
 	
 	patrol_start_pos = global_position
 	patrol_end_pos = global_position + Vector2(patrol_dist, 0)
@@ -22,10 +22,10 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	enemy_state(delta)
 	apply_gravity(gravity, 900)
-	flip_character_node(sack_guy_sprite, sack_guy_attack_range, sack_guy_detection_range)
+	flip_character_node(guard_sprite, guard_detection_range, guard_attack_range)
 	death()
 	
-	update_animation(sack_guy_sprite)
+	update_animation(guard_sprite)
 	move_and_slide()
 
 # function to manage various state conditions
@@ -35,7 +35,7 @@ func enemy_state(delta: float) -> void:
 		if is_attacking:
 			attack()
 		elif is_chasing:
-			run(player_node.position,1, 1.2)
+			run(player_node.position,1, 1.5)
 	elif is_patrolling:
 		patrol(delta)
 
@@ -65,9 +65,9 @@ func _on_detection_range_body_exited(body: Node2D) -> void:
 
 #function to handlel animation end flags
 func _on_animated_sprite_2d_animation_finished() -> void:
-	if sack_guy_sprite.animation == 'attack':
+	if guard_sprite.animation == 'attack':
 		is_attacking = false
-	if sack_guy_sprite.animation == 'death':
+	if guard_sprite.animation == 'death':
 		is_dying = false
 		is_dead = true
 

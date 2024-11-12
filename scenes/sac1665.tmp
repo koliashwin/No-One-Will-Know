@@ -1,0 +1,123 @@
+[gd_scene load_steps=16 format=3 uid="uid://cjncoyoyugtke"]
+
+[ext_resource type="Texture2D" uid="uid://c8547gglsuusm" path="res://assets/enemies/sack_guy/sack_guy_attack_pos0030.png" id="1_pik4c"]
+[ext_resource type="Script" path="res://scripts/enemies/sack_guy.gd" id="1_qxi4f"]
+[ext_resource type="Texture2D" uid="uid://bahxfftqy7kd0" path="res://assets/enemies/sack_guy/sack_guy_attack_pos0033.png" id="2_gc3y4"]
+[ext_resource type="Texture2D" uid="uid://dayuu4vf6ry2w" path="res://assets/enemies/sack_guy/sack_guy_death0015.png" id="3_yypae"]
+[ext_resource type="Texture2D" uid="uid://dkkkxq7nrnmq0" path="res://assets/enemies/sack_guy/sack_guy_death0018.png" id="4_o6p4j"]
+[ext_resource type="Texture2D" uid="uid://vkduwvali8un" path="res://assets/enemies/sack_guy/sack_guy_death0021.png" id="5_yd3x4"]
+[ext_resource type="Texture2D" uid="uid://c0505pc5uwppe" path="res://assets/enemies/sack_guy/sack_guy_death0024.png" id="6_mafo5"]
+[ext_resource type="Texture2D" uid="uid://gtwdvp825urh" path="res://assets/enemies/sack_guy/sack_guy_run0012.png" id="7_nqhoa"]
+[ext_resource type="Texture2D" uid="uid://bqfhqyhq8gtox" path="res://assets/enemies/sack_guy/sack_guy_run0003.png" id="8_u3crr"]
+[ext_resource type="Texture2D" uid="uid://drbpwkcns2pv5" path="res://assets/enemies/sack_guy/sack_guy_run0006.png" id="9_c0y8j"]
+[ext_resource type="Texture2D" uid="uid://coyga5fuujmxp" path="res://assets/enemies/sack_guy/sack_guy_run0009.png" id="10_usm40"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e8v70"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_pik4c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_gc3y4")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_yypae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_o6p4j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_yd3x4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_mafo5")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_mafo5")
+}],
+"loop": true,
+"name": &"died",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_nqhoa")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_u3crr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_c0y8j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_usm40")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_nqhoa")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jwja1"]
+size = Vector2(64, 104)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_8mq5f"]
+a = Vector2(-192, 0)
+b = Vector2(64, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_15bnl"]
+b = Vector2(-96, 0)
+
+[node name="sack_guy" type="CharacterBody2D"]
+collision_layer = 4
+script = ExtResource("1_qxi4f")
+speed = null
+gravity = null
+patrol_dist = null
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_e8v70")
+animation = &"died"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jwja1")
+
+[node name="DetectionRange" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
+position = Vector2(0, -16)
+shape = SubResource("SegmentShape2D_8mq5f")
+
+[node name="AttackRange" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+shape = SubResource("SegmentShape2D_15bnl")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="body_entered" from="DetectionRange" to="." method="_on_detection_range_body_entered"]
+[connection signal="body_exited" from="DetectionRange" to="." method="_on_detection_range_body_exited"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]

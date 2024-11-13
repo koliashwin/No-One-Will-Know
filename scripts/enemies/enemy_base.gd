@@ -4,6 +4,8 @@ extends CharacterBody2D
 var speed: float = 200
 var gravity: float = 100
 var patrol_dist: int = 128
+var health: int = 5
+var attack_power: int = 1
 
 # reference and condition variables(flags)
 var player_node: Node2D
@@ -57,11 +59,16 @@ func attack() -> void:
 	is_attacking = true
 	# attack logic goes here
 
-# dummy death function
+func hurt(damage: int) -> void:
+	print(self.name, " got hurt")
+	health -= damage
+	print(self.name, " remaining HP : ", health)
+	if health <= 0:
+		death()
+		print(self.name, " died")
+
 func death() -> void:
-	#dummy logic to test the death animation
-	if Input.is_action_just_pressed("ability") and !is_dying:
-		is_dying = true
+	is_dying = true
 
 #function to flip charater sprites and collision shapes 
 func flip_character_node(

@@ -4,6 +4,7 @@ extends "res://scripts/enemies/enemy_base.gd"
 @export var sack_guy_speed: float = 120
 @export var sack_guy_gravity: float = 100
 @export var sack_guy_patrol_dist: int = 64
+@export var sack_guy_health: int = 10
 
 #import the required nodes
 @onready var sack_guy_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -12,9 +13,12 @@ extends "res://scripts/enemies/enemy_base.gd"
 
 
 func _ready() -> void:
+	add_to_group('Enemies')
+	
 	speed = sack_guy_speed
 	gravity = sack_guy_gravity
 	patrol_dist = sack_guy_patrol_dist
+	health = sack_guy_health
 	
 	patrol_start_pos = global_position
 	patrol_end_pos = global_position + Vector2(patrol_dist, 0)
@@ -23,7 +27,6 @@ func _physics_process(delta: float) -> void:
 	enemy_state(delta)
 	apply_gravity(gravity, 900)
 	flip_character_node(sack_guy_sprite, sack_guy_attack_range, sack_guy_detection_range)
-	death()
 	
 	update_animation(sack_guy_sprite)
 	move_and_slide()

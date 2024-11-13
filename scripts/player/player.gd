@@ -5,6 +5,9 @@ extends CharacterBody2D
 @export var gravity: float = 100
 @export var jump_force: float = 1500
 @export var max_fall_speed: float = 900
+@export var attack_power: int = 3
+@export var health: int = 5
+@export var max_health: int = 5
 
 #condition check variables (flags)
 var is_attacking: bool = false
@@ -13,6 +16,8 @@ var is_dead: bool = false
 
 #import the required nodes
 @onready var player_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var player_attack_range: Area2D = $AttackArea
+@onready var player_attack_area_shape: CollisionShape2D = $AttackArea/CollisionShape2D
 
 func _ready() -> void:
 	add_to_group('Player')
@@ -25,7 +30,7 @@ func _physics_process(delta: float) -> void:
 	
 	jump()
 	attack()
-	death()
+	flip_player_node()
 	
 	update_animation()
 	move_and_slide()
@@ -36,22 +41,35 @@ func apply_gravity(gravity: float, max_fall_speed: float) -> void:
 		velocity.y += gravity
 
 func jump() -> void:
-	apply_gravity(gravity, max_fall_speed)
-	
 	#jump logic
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y -= jump_force
 
 func attack() -> void:
-	# dummy attack logic to test animation
-	if Input.is_action_just_pressed("attack") and !is_attacking:
+	if Input.is_action_just_pressed("attack") and !is_attacking and !is_dying and !is_dead:
 		is_attacking = true
-		# attack logic goes here
+		player_attack_area_shape.disabled = false
 
+#function to heal or hurt player use the negative value to hurt and positive value to heal
+func hurt_heal(helth_points: int) -> void:
+	health = clamp(health + helth_points, 0, max_health)
+	print("player health : ", health)
+	if health <= 0:
+		death()
+
+#death logic
 func death() ->void:
-	#dummy logic to test the death animation
-	if Input.is_action_just_pressed("ability") and !is_dying:
-		is_dying = true
+	is_dying = true
+
+func flip_player_node() -> void:
+	# flip the sprite based and attack area on direction player facing
+	if !is_dying and !is_dead:
+		if velocity.x < 0:
+			player_sprite.flip_h = true
+			player_attack_range.scale.x = -1
+		elif velocity.x > 0:
+			player_sprite.flip_h = false
+			player_attack_range.scale.x = 1
 
 func update_animation() -> void:
 	# this condition check for the priority animations and exits the update cycle early on if required
@@ -66,12 +84,6 @@ func update_animation() -> void:
 				player_sprite.play('death')
 		return
 	
-	# flip the sprite based on direction its facing
-	if velocity.x < 0:
-		player_sprite.flip_h = true
-	elif velocity.x > 0:
-		player_sprite.flip_h = false
-	
 	# standared character animation logic
 	if is_on_floor():
 		if velocity.x == 0:
@@ -79,16 +91,28 @@ func update_animation() -> void:
 		else:
 			player_sprite.play('run')
 	else:
+		apply_gravity(gravity, max_fall_speed)
 		if velocity.y < 0:
 			player_sprite.play('jump')
 		else:
 			player_sprite.play('fall')
 
-
 func _on_animated_sprite_2d_animation_finished() -> void:
 	# set/update flags according to some animation logic
 	if player_sprite.animation == 'attack':
 		is_attacking = false
+		player_attack_area_shape.disabled = true
 	if player_sprite.animation == 'death':
 		is_dying = false
 		is_dead = true
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Enemies"):
+		print(body.name)
+		if body.has_method("hurt"):
+			body.hurt(attack_power)
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Enemies"):
+		var damage: int = body.attack_power
+		hurt_heal(-damage)

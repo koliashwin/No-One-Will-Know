@@ -13,9 +13,6 @@ size = Vector2(704, 16)
 
 [node name="World" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("1_41ysu")]
-position = Vector2(160, 96)
-
 [node name="platform2" type="StaticBody2D" parent="."]
 position = Vector2(520, -16)
 rotation = 1.5708
@@ -53,3 +50,6 @@ shape = SubResource("RectangleShape2D_eetvx")
 
 [node name="sack_guy" parent="." instance=ExtResource("2_4rh0u")]
 position = Vector2(0, 108)
+
+[node name="Player" parent="." instance=ExtResource("1_41ysu")]
+position = Vector2(160, 96)

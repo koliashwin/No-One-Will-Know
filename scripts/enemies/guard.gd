@@ -12,6 +12,8 @@ var guard_patrol_dist: int = 128
 
 
 func _ready() -> void:
+	add_to_group('Enemies')
+	
 	speed = guard_speed
 	gravity = guard_gravity
 	patrol_dist = guard_patrol_dist
@@ -23,7 +25,6 @@ func _physics_process(delta: float) -> void:
 	enemy_state(delta)
 	apply_gravity(gravity, 900)
 	flip_character_node(guard_sprite, guard_detection_range, guard_attack_range)
-	death()
 	
 	update_animation(guard_sprite)
 	move_and_slide()

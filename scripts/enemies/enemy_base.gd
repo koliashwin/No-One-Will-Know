@@ -11,10 +11,11 @@ var attack_power: int = 1
 var player_node: Node2D
 var player_detected: bool = false
 var is_attacking: bool = false
+var can_attack: bool = true
 var is_dying: bool = false
 var is_dead: bool = false
 var is_patrolling: bool = true
-var is_chasing: bool = true
+var is_chasing: bool = false
 
 #patrol variables
 var patrol_start_pos: Vector2
@@ -60,12 +61,9 @@ func attack() -> void:
 	# attack logic goes here
 
 func hurt(damage: int) -> void:
-	print(self.name, " got hurt")
 	health -= damage
-	print(self.name, " remaining HP : ", health)
 	if health <= 0:
 		death()
-		print(self.name, " died")
 
 func death() -> void:
 	is_dying = true

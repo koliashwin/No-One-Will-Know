@@ -58,7 +58,7 @@ animations = [{
 size = Vector2(80, 56)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_x5on5"]
-a = Vector2(64, 0)
+a = Vector2(40, 0)
 b = Vector2(-192, 0)
 
 [node name="slime" type="CharacterBody2D"]

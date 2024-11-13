@@ -2,7 +2,6 @@ extends "res://scripts/enemies/enemy_base.gd"
 # Sack_Guy Script(enemy)
 #declare export variables(repeated var)
 @export var sack_guy_speed: float = 120
-@export var sack_guy_gravity: float = 100
 @export var sack_guy_patrol_dist: int = 64
 @export var sack_guy_health: int = 10
 
@@ -10,13 +9,13 @@ extends "res://scripts/enemies/enemy_base.gd"
 @onready var sack_guy_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var sack_guy_detection_range: Area2D = $DetectionRange
 @onready var sack_guy_attack_range: Area2D = $AttackRange
+@onready var sack_guy_attack_cooldown: Timer = $AttackCooldown
 
 
 func _ready() -> void:
 	add_to_group('Enemies')
 	
 	speed = sack_guy_speed
-	gravity = sack_guy_gravity
 	patrol_dist = sack_guy_patrol_dist
 	health = sack_guy_health
 	
@@ -70,6 +69,9 @@ func _on_detection_range_body_exited(body: Node2D) -> void:
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if sack_guy_sprite.animation == 'attack':
 		is_attacking = false
+		can_attack = false
+		sack_guy_attack_range.set_deferred('monitoring', false)
+		sack_guy_attack_cooldown.start()
 	if sack_guy_sprite.animation == 'death':
 		is_dying = false
 		is_dead = true
@@ -77,7 +79,8 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 #attack setup when player enters attack range
 func _on_attack_range_body_entered(body: Node2D) -> void:
 	if body.is_in_group('Player'):
-		is_attacking = true
+		if can_attack:
+			is_attacking = true
 		#sack_guy_detection_range.monitoring = false
 
 #attack setup when player exits attack range
@@ -86,3 +89,7 @@ func _on_attack_range_body_exited(body: Node2D) -> void:
 		pass
 		#is_attacking = false
 		#sack_guy_detection_range.monitoring = true
+
+func _on_attack_cooldown_timeout() -> void:
+	can_attack = true
+	sack_guy_attack_range.set_deferred('monitoring', true)

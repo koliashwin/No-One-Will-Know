@@ -81,7 +81,7 @@ size = Vector2(64, 104)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_8mq5f"]
 a = Vector2(-320, 0)
-b = Vector2(64, 0)
+b = Vector2(32, 0)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_15bnl"]
 b = Vector2(-96, 0)
@@ -113,8 +113,12 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("SegmentShape2D_15bnl")
 
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="DetectionRange" to="." method="_on_detection_range_body_entered"]
 [connection signal="body_exited" from="DetectionRange" to="." method="_on_detection_range_body_exited"]
 [connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
 [connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]

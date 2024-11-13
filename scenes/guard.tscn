@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cuwwlxmpw12av"]
+[gd_scene load_steps=19 format=3 uid="uid://cuwwlxmpw12av"]
 
 [ext_resource type="Script" path="res://scripts/enemies/guard.gd" id="1_0uhk7"]
 [ext_resource type="Texture2D" uid="uid://b7sikfn8yfhie" path="res://assets/enemies/guard/guard_attack0033.png" id="2_qvqg5"]
@@ -95,13 +95,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jwja1"]
 size = Vector2(80, 80)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_8mq5f"]
-a = Vector2(-192, 4)
-b = Vector2(64, 4)
-
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_15bnl"]
 a = Vector2(0, 4)
-b = Vector2(-64, 4)
+b = Vector2(-192, 4)
 
 [node name="guard" type="CharacterBody2D"]
 collision_layer = 4
@@ -117,14 +113,6 @@ frame_progress = 1.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_jwja1")
 
-[node name="DetectionRange" type="Area2D" parent="."]
-collision_layer = 4
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
-position = Vector2(0, -4)
-shape = SubResource("SegmentShape2D_8mq5f")
-
 [node name="AttackRange" type="Area2D" parent="."]
 position = Vector2(0, 12)
 collision_layer = 4
@@ -133,8 +121,14 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("SegmentShape2D_15bnl")
 
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="SwitchDirection" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="body_entered" from="DetectionRange" to="." method="_on_detection_range_body_entered"]
-[connection signal="body_exited" from="DetectionRange" to="." method="_on_detection_range_body_exited"]
 [connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
 [connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="SwitchDirection" to="." method="_on_switch_direction_timeout"]

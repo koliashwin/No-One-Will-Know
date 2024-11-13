@@ -38,13 +38,11 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		player_node = body
 		player_detected = true
 		is_surprised = true
-		#print(player_node.position)
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.is_in_group('Player'):
 		player_node = null
 		player_detected = false
-		#print(player_node.position)
 
 func update_animation() -> void:
 	#logic for priority animations

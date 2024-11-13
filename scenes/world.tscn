@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://wes2gq2lgo3l"]
+[gd_scene load_steps=8 format=3 uid="uid://wes2gq2lgo3l"]
 
 [ext_resource type="PackedScene" uid="uid://dqbd4s0emok4i" path="res://scenes/player.tscn" id="1_41ysu"]
 [ext_resource type="PackedScene" uid="uid://cjncoyoyugtke" path="res://scenes/sack_guy.tscn" id="2_4rh0u"]
+[ext_resource type="PackedScene" uid="uid://cuwwlxmpw12av" path="res://scenes/guard.tscn" id="2_5p2ro"]
+[ext_resource type="PackedScene" uid="uid://dlm3mdmcnwnyj" path="res://scenes/slime.tscn" id="3_od6u2"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_raiqf"]
 
@@ -14,8 +16,9 @@ size = Vector2(704, 16)
 [node name="World" type="Node2D"]
 
 [node name="platform2" type="StaticBody2D" parent="."]
-position = Vector2(520, -16)
+position = Vector2(520, 107)
 rotation = 1.5708
+scale = Vector2(0.36, 1)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="platform2"]
 position = Vector2(-1.90735e-06, 4.76837e-07)
@@ -23,6 +26,32 @@ scale = Vector2(384, 16)
 mesh = SubResource("QuadMesh_raiqf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="platform2"]
+shape = SubResource("RectangleShape2D_eetvx")
+
+[node name="platform5" type="StaticBody2D" parent="."]
+position = Vector2(880, 40)
+rotation = 1.5708
+scale = Vector2(0.12, 1)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="platform5"]
+position = Vector2(-1.90735e-06, 4.76837e-07)
+scale = Vector2(384, 16)
+mesh = SubResource("QuadMesh_raiqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform5"]
+shape = SubResource("RectangleShape2D_eetvx")
+
+[node name="platform6" type="StaticBody2D" parent="."]
+position = Vector2(1704, 40)
+rotation = 1.5708
+scale = Vector2(0.12, 1)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="platform6"]
+position = Vector2(-1.90735e-06, 4.76837e-07)
+scale = Vector2(384, 16)
+mesh = SubResource("QuadMesh_raiqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform6"]
 shape = SubResource("RectangleShape2D_eetvx")
 
 [node name="platform" type="StaticBody2D" parent="."]
@@ -34,6 +63,18 @@ scale = Vector2(704, 16)
 mesh = SubResource("QuadMesh_raiqf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="platform"]
+shape = SubResource("RectangleShape2D_3jgjc")
+
+[node name="platform4" type="StaticBody2D" parent="."]
+position = Vector2(1120, 72)
+scale = Vector2(1.68, 1)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="platform4"]
+position = Vector2(-1.90735e-06, 4.76837e-07)
+scale = Vector2(704, 16)
+mesh = SubResource("QuadMesh_raiqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform4"]
 shape = SubResource("RectangleShape2D_3jgjc")
 
 [node name="platform3" type="StaticBody2D" parent="."]
@@ -48,8 +89,14 @@ mesh = SubResource("QuadMesh_raiqf")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="platform3"]
 shape = SubResource("RectangleShape2D_eetvx")
 
+[node name="guard" parent="." instance=ExtResource("2_5p2ro")]
+position = Vector2(704, 24)
+
 [node name="sack_guy" parent="." instance=ExtResource("2_4rh0u")]
 position = Vector2(0, 108)
+
+[node name="slime" parent="." instance=ExtResource("3_od6u2")]
+position = Vector2(1056, 40)
 
 [node name="Player" parent="." instance=ExtResource("1_41ysu")]
 position = Vector2(160, 96)

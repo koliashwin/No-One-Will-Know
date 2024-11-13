@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 	#Horizontal movment logic
 	var horizontal_diraction: int = Input.get_axis("move_left", "move_right")
 	velocity.x = horizontal_diraction * speed
-	
+	apply_gravity(gravity, max_fall_speed)
 	jump()
 	attack()
 	flip_player_node()
@@ -53,7 +53,6 @@ func attack() -> void:
 #function to heal or hurt player use the negative value to hurt and positive value to heal
 func hurt_heal(helth_points: int) -> void:
 	health = clamp(health + helth_points, 0, max_health)
-	print("player health : ", health)
 	if health <= 0:
 		death()
 
@@ -91,7 +90,6 @@ func update_animation() -> void:
 		else:
 			player_sprite.play('run')
 	else:
-		apply_gravity(gravity, max_fall_speed)
 		if velocity.y < 0:
 			player_sprite.play('jump')
 		else:
@@ -108,11 +106,11 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Enemies"):
-		print(body.name)
-		if body.has_method("hurt"):
+		if body.has_method("hurt") and !body.is_dead:
 			body.hurt(attack_power)
 
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Enemies"):
 		var damage: int = body.attack_power
-		hurt_heal(-damage)
+		if !body.is_dead and !body.is_dying:
+			hurt_heal(-damage)
